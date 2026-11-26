@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Toggle</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --card-bg: #f4f4f4;
+            --btn-bg: #333333;
+            --btn-text: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            color-scheme: dark;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --btn-bg: #e0e0e0;
+            --btn-text: #121212;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card {
+            width: min(100%, 360px);
+            padding: 2rem;
+            border-radius: 12px;
+            background-color: var(--card-bg);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: 0;
+            border-radius: 8px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            font: inherit;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        button:hover { opacity: 0.85; }
+        button:focus-visible { outline: 3px solid #6b9cff; outline-offset: 3px; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Colour mode</h1>
+        <p>This text changes color with the theme.</p>
+        <button id="theme-toggle" type="button" aria-pressed="false">Switch to dark mode</button>
+    </main>
+
+    <script>
+        const root = document.documentElement;
+        const toggleBtn = document.getElementById('theme-toggle');
+
+        // Restore the saved preference, defaulting to light mode.
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+            root.setAttribute('data-theme', savedTheme);
+        }
+
+        function updateButton() {
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            toggleBtn.textContent = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+            toggleBtn.setAttribute('aria-pressed', String(isDark));
+        }
+
+        updateButton();
+
+        toggleBtn.addEventListener('click', () => {
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButton();
+        });
+    </script>
+</body>
+</html>
